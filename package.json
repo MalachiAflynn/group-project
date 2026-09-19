@@ -1,0 +1,24 @@
+{
+  "name": "group-project",
+  "version": "1.0.0",
+  "description": "| Name | GitHub Username |\r |------|-----------------|\r | Malachi Flynn | [@MalachiAflynn](https://github.com/MalachiAflynn) |\r | Caleb Richards | [@CalebUmass](https://github.com/CalebUmass) |\r | Maryamawit Gebremedhen | [@gebremedhen-mari](https://github.com/gebremedhen-mari) |\r | Lenny Doiron | [@LennartDoiron](https://github.com/LennartDoiron) |",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MalachiAflynn/group-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/MalachiAflynn/group-project/issues"
+  },
+  "homepage": "https://github.com/MalachiAflynn/group-project#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
