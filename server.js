@@ -8,7 +8,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/Inventory", (req, res) => {
-  res.send("");
+  res.send("This is the inventory of the lost and found.");
+});
+
+app.get("/found", (req, res) => {
+  res.send("This is the found page.");
 });
 
 app.listen(PORT, () => {
