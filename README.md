@@ -25,3 +25,23 @@
 ## Project domain
 
 We are planning on building a webapp that is a mobile verstion of a UMass camous lost and found. We did some resesarch about campus lost and found, and saw that there are many different sites to find lost items. The domain would be all of camous, but just a centralized system. This would benifit UMass students and faculty alike making tracking down lost items much less of a headache.
+
+## Getting Started
+
+To run the project locally:
+
+1. Clone the repository:
+   `git clone https://github.com/MalachiAflynn/group-project.git`
+
+2. Go into the project folder:
+   `cd group-project`
+
+3. Install the required dependencies:
+   `npm install`
+
+4. Start the server:
+   `npm start`
+
+5. Open `http://localhost:3000` in your browser.
+
+The inventory page can be viewed at `localhost:3000/inventory`.
