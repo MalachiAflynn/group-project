@@ -24,7 +24,7 @@
 
 ## Project domain
 
-We are planning on building a webapp that is a mobile verstion of a UMass camous lost and found. We did some resesarch about campus lost and found, and saw that there are many different sites to find lost items. The domain would be all of camous, but just a centralized system. This would benifit UMass students and faculty alike making tracking down lost items much less of a headache.
+We are planning on building a webapp that is a mobile version of a UMass camous lost and found. We did some research about campus lost and found, and saw that there are many different sites to find lost items. The domain would be all of campus, but just a centralized system. This would benefit UMass students and faculty alike making tracking down lost items much less of a headache.
 
 ## Getting Started
 
