@@ -39,9 +39,37 @@ To run the project locally:
 3. Install the required dependencies:
    `npm install`
 
-4. Start the server:
+4. Set up the database:
+   - Copy the example env file: `cp .env.example .env`
+   - Put the team's MongoDB Atlas connection string in `.env` as `MONGODB_URI`
+     (ask a teammate for it; it is never committed).
+
+5. Start the server:
    `npm start`
+   You should see "Connected to MongoDB" in the terminal.
 
-5. Open `http://localhost:3000` in your browser.
+6. Open `http://localhost:3000` in your browser.
 
-The inventory page can be viewed at `localhost:3000/inventory`.
+## System Diagram
+
+```
+Browser (form + public/app.js fetch)
+        |
+        |  POST /lost  or  POST /found  (JSON)
+        v
+routes/lost.js | routes/found.js        -> wires paths to controller functions
+        |
+        v
+controllers/lostController.js | foundController.js   -> req/res <-> service
+        |
+        v
+services/lostService.js | foundService.js           -> validation (400 on bad input)
+        |
+        v
+repositories/lostRepository.js | foundRepository.js -> only layer that touches the DB
+        |
+        v
+models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB Atlas
+
+Errors at any layer -> asyncHandler -> middleware/errorHandler.js -> JSON error response
+```
