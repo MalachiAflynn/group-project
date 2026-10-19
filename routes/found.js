@@ -1,7 +1,9 @@
 import { Router } from "express";
+import { getFoundItems, handlenewitem } from "../controllers/foundController.js";
 
-const router = Router();
+const fndrouter = Router();
 
-router.get("/", (req, res) => res.send("Found page coming soon"));
+fndrouter.get("/", getFoundItems);
+fndrouter.post("/", handlenewitem);
 
-export default router;
+export default fndrouter;
