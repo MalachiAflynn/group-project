@@ -1,2 +1,5 @@
-Used claude for some terminal commands. 9/15
-I did not use ai for Sprint 01.
+-Used claude for some terminal commands. 9/15
+-I did not use ai for Sprint 01.
+-Claude walked me through setting up MongoDB Atlas: creating the database user, getting the connection string, setting up .env and fixing the IP access list. sprint 2
+-Claude helped me write the System Diagram in the readme. sprint 2
+-I used Claude as a reference for terminal and Git commands. sprint 2
