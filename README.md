@@ -73,3 +73,9 @@ models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB Atlas
 
 Errors at any layer -> asyncHandler -> middleware/errorHandler.js -> JSON error response
 ```
+
+## Design Decisions
+
+### Maryamawit Gebremedhen — Found Backend
+
+ For the Found backend, I decided to check all required fields and return one error message listing everything that is missing. i was chooseing between that stopping checking as soon as the first missing field was found. That would have been easier, but the user would have to keep submitting the form to find out what else was missing. the reason I chose to check all fields at once is because makes feedback more clear and makes it easier to fix the form, even though it takes a little more code.
