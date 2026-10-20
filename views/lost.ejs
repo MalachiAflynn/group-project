@@ -1,0 +1,52 @@
+<%- include("partials/header") %>
+
+<h1>Report a lost item</h1>
+
+<form id="report-form" data-endpoint="/lost">
+  <label>Item name <input name="title" required></label>
+  <label>Description <textarea name="description"></textarea></label>
+  <label>Category
+    <select name="category" required>
+      <option value="">Choose one</option>
+      <option>Electronics</option>
+      <option>Clothing</option>
+      <option>ID/Cards</option>
+      <option>Keys</option>
+      <option>Bags</option>
+      <option>Other</option>
+    </select>
+  </label>
+  <label>Where you lost it <input name="location" required></label>
+  <label>Date <input type="date" name="date"></label>
+  <label>Your name <input name="contactName" required></label>
+  <label>Your email <input type="email" name="contactEmail" required></label>
+  <button type="submit">Submit</button>
+</form>
+
+<div id="form-message" class="error" aria-live="polite"></div>
+
+<h2>Lost items</h2>
+
+<% if (items.length === 0) { %>
+    <p id="empty-message">No lost items reported yet.</p>
+<% } %>
+
+<ul id="item-list">
+  <% items.forEach((item) => { %>
+    <li class="item">
+      <h3><%= item.title %></h3>
+      <p>Category: <%= item.category %></p>
+      <% if (item.description) { %>
+        <p>Description: <%= item.description %></p>
+      <% } %>
+      <p>Location: <%= item.location %></p>
+      <p>Date: <%= item.date.toLocaleDateString("en-US", { timeZone: "UTC" }) %></p>
+      <p>Contact name: <%= item.contactName %></p>
+      <p>Contact email: <%= item.contactEmail %></p>
+    </li>
+  <% }) %>
+</ul>
+
+
+
+<%- include("partials/footer") %>

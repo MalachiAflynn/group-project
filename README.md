@@ -74,6 +74,31 @@ models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB Atlas
 Errors at any layer -> asyncHandler -> middleware/errorHandler.js -> JSON error response
 ```
 
+## Features
+
+Lost is for someone who lost something. They post what it is and where they lost it, so a finder can contact them.
+Found is for someone who found something. They post what they picked up, so the owner can contact them.
+Both pages show every report so people who have lost/found items can contact each other.
+
+### Routes
+
+| Method | Path     | What it does |
+|--------|----------|--------------|
+| GET    | `/`      | Redirects to `/lost`. |
+| GET    | `/lost`  | Shows the Lost page with the report form and all lost items, newest being first. |
+| POST   | `/lost`  | Saves a lost item. Returns `201` with the saved item, or `400` with an error message if a required field is missing. |
+| GET    | `/found` | Shows the Found page with the report form and all found items, newest being first. |
+| POST   | `/found` | Saves a found item. Returns `201` with the saved item, or `400` with an error message if a required field is missing. |
+
+### The Form
+
+There are seven fields to fill out in the form. There are five which 
+are required: item name, category, location, contact name and email. Description and Date are optional. In addition, an empty date becomes today.
+
+### After You Submit
+
+`app.js` sends the form with fetch, the server checks and saves it, and then one of three things can happen: the item appears at the top and the form clears, the server's error message is shown in red, or "Could not reach the server." shows.
+
 ## Design Decisions
 
 ### Maryamawit Gebremedhen — Found Backend
