@@ -104,3 +104,7 @@ are required: item name, category, location, contact name and email. Description
 ### Maryamawit Gebremedhen — Found Backend
 
  For the Found backend, I decided to check all required fields and return one error message listing everything that is missing. i was chooseing between that stopping checking as soon as the first missing field was found. That would have been easier, but the user would have to keep submitting the form to find out what else was missing. the reason I chose to check all fields at once is because makes feedback more clear and makes it easier to fix the form, even though it takes a little more code.
+
+### Lenny Doiron — Lost Backend
+
+For the Lost backend, I put the required field check in lostService.js instead of adding `required: true` to the Mongoose model. The service throws a 400 that names the missing fields, so the user sees exactly what to fix. With the mongoose option, the error has no status, so our error handler would send a 500 with "Something went wrong on the server." and the user wouldn't know which field was missing.
