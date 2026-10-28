@@ -33,22 +33,23 @@ To run the project locally:
 1. Clone the repository:
    `git clone https://github.com/MalachiAflynn/group-project.git`
 
-2. Go into the project folder:
+2. Go into the project folder and open it in the dev container:
    `cd group-project`
 
-3. Install the required dependencies:
+3. Copy the example env file:
+   `cp .env.example .env`
+
+4. Start the database:
+   `dc-up mongo`
+
+5. Install the required dependencies:
    `npm install`
 
-4. Set up the database:
-   - Copy the example env file: `cp .env.example .env`
-   - Put the team's MongoDB Atlas connection string in `.env` as `MONGODB_URI`
-     (ask a teammate for it; it is never committed).
-
-5. Start the server:
+6. Start the server:
    `npm start`
    You should see "Connected to MongoDB" in the terminal.
 
-6. Open `http://localhost:3000` in your browser.
+7. Open `http://localhost:3000` in your browser.
 
 ## System Diagram
 
