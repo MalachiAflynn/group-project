@@ -41,8 +41,10 @@ To run the project locally:
 
 4. Set up the database:
    - Copy the example env file: `cp .env.example .env`
-   - Put the team's MongoDB Atlas connection string in `.env` as `MONGODB_URI`
+   - Team members: put the team's MongoDB Atlas connection string in `.env` as `MONGODB_URI`
      (ask a teammate for it; it is never committed).
+   - Everyone else: use your own MongoDB instead. For a local MongoDB, set this in `.env`:
+     `MONGODB_URI=mongodb://localhost:27017/lost-and-found`
 
 5. Start the server:
    `npm start`
