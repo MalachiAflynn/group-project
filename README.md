@@ -33,24 +33,23 @@ To run the project locally:
 1. Clone the repository:
    `git clone https://github.com/MalachiAflynn/group-project.git`
 
-2. Go into the project folder:
+2. Go into the project folder and open it in the dev container:
    `cd group-project`
 
-3. Install the required dependencies:
+3. Copy the example env file:
+   `cp .env.example .env`
+
+4. Start the database:
+   `dc-up mongo`
+
+5. Install the required dependencies:
    `npm install`
 
-4. Set up the database:
-   - Copy the example env file: `cp .env.example .env`
-   - Team members: put the team's MongoDB Atlas connection string in `.env` as `MONGODB_URI`
-     (ask a teammate for it; it is never committed).
-   - Everyone else: use your own MongoDB instead. For a local MongoDB, set this in `.env`:
-     `MONGODB_URI=mongodb://localhost:27017/lost-and-found`
-
-5. Start the server:
+6. Start the server:
    `npm start`
    You should see "Connected to MongoDB" in the terminal.
 
-6. Open `http://localhost:3000` in your browser.
+7. Open `http://localhost:3000` in your browser.
 
 ## System Diagram
 
@@ -71,7 +70,7 @@ services/lostService.js | foundService.js           -> validation (400 on bad in
 repositories/lostRepository.js | foundRepository.js -> only layer that touches the DB
         |
         v
-models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB Atlas
+models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB (dev container)
 
 Errors at any layer -> asyncHandler -> middleware/errorHandler.js -> JSON error response
 ```
