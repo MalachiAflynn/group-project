@@ -104,3 +104,7 @@ are required: item name, category, location, contact name and email. Description
 ### Maryamawit Gebremedhen — Found Backend
 
  For the Found backend, I decided to check all required fields and return one error message listing everything that is missing. i was chooseing between that stopping checking as soon as the first missing field was found. That would have been easier, but the user would have to keep submitting the form to find out what else was missing. the reason I chose to check all fields at once is because makes feedback more clear and makes it easier to fix the form, even though it takes a little more code.
+
+### Malachi Flynn - Foundation and Database
+
+For the foundation, I chose to store our items in MongoDB instead of a JSON file. The JSON file was the credible alternative and would have been easier to start with, since it needs no account or connection string. The problem is that with a JSON file, every save reads the whole file, adds the item and writes the whole file back. If two people submit at the same moment, one write can replace the other and that report is lost. MongoDB saves each item as its own document, so two saves at once do not overwrite each other, and the data survives a server restart without us managing a file. What MongoDB cost us was setup: everyone needed the connection string in their own .env, and the app cannot start without one, which is why .env.example has to stay in the repo.
