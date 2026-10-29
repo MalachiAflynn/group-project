@@ -70,7 +70,7 @@ services/lostService.js | foundService.js           -> validation (400 on bad in
 repositories/lostRepository.js | foundRepository.js -> only layer that touches the DB
         |
         v
-models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB Atlas
+models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB (dev container)
 
 Errors at any layer -> asyncHandler -> middleware/errorHandler.js -> JSON error response
 ```
@@ -109,3 +109,7 @@ are required: item name, category, location, contact name and email. Description
 ### Lenny Doiron — Lost Backend
 
 For the Lost backend, I put the required field check in lostService.js instead of adding `required: true` to the Mongoose model. The service throws a 400 that names the missing fields, so the user sees exactly what to fix. With the mongoose option, the error has no status, so our error handler would send a 500 with "Something went wrong on the server." and the user wouldn't know which field was missing.
+
+### Malachi Flynn - Foundation and Database
+
+For the foundation, I chose to store our items in MongoDB instead of a JSON file. The JSON file was the credible alternative and would have been easier to start with, since it needs no account or connection string. The problem is that with a JSON file, every save reads the whole file, adds the item and writes the whole file back. If two people submit at the same moment, one write can replace the other and that report is lost. MongoDB saves each item as its own document, so two saves at once do not overwrite each other, and the data survives a server restart without us managing a file. What MongoDB cost us was setup: everyone needed the connection string in their own .env, and the app cannot start without one, which is why .env.example has to stay in the repo.
