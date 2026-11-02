@@ -113,3 +113,7 @@ For the Lost backend, I put the required field check in lostService.js instead o
 ### Malachi Flynn - Foundation
 
 In server.js, I made the app connect to MongoDB before it starts listening, and exit with a clear error if the connection fails. The alternative was to start listening right away and let Mongoose connect in the background. That would start faster, but if the database was down the server would still look like it was running, and every form submission would fail with a confusing error. Connecting first means a bad connection string or a stopped database shows up immediately as "Could not connect to MongoDB" instead of later on someone's request.
+
+### Caleb Richards - Lost/Found Frontend
+
+In app.js I made the design decision to use one submit handler for both forms, which reads the URL from `form.dataset.endpoint`. The alternative to this method would be to use a separate script for each of the lost and found pages. I chose this way because it keeps all of the submit logic in one place. With two separate scripts, a fix to how errors are shown (like displaying a 400 message or a network failure) could be made on the Lost page and forgotten on the Found page, so the two forms would behave differently. With one handler, if a bug comes up or we want to change how we submit items, we only have to change it once.
