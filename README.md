@@ -33,22 +33,23 @@ To run the project locally:
 1. Clone the repository:
    `git clone https://github.com/MalachiAflynn/group-project.git`
 
-2. Go into the project folder:
+2. Go into the project folder and open it in the dev container:
    `cd group-project`
 
-3. Install the required dependencies:
+3. Copy the example env file:
+   `cp .env.example .env`
+
+4. Start the database:
+   `dc-up mongo`
+
+5. Install the required dependencies:
    `npm install`
 
-4. Set up the database:
-   - Copy the example env file: `cp .env.example .env`
-   - Put the team's MongoDB Atlas connection string in `.env` as `MONGODB_URI`
-     (ask a teammate for it; it is never committed).
-
-5. Start the server:
+6. Start the server:
    `npm start`
    You should see "Connected to MongoDB" in the terminal.
 
-6. Open `http://localhost:3000` in your browser.
+7. Open `http://localhost:3000` in your browser.
 
 ## System Diagram
 
@@ -69,7 +70,7 @@ services/lostService.js | foundService.js           -> validation (400 on bad in
 repositories/lostRepository.js | foundRepository.js -> only layer that touches the DB
         |
         v
-models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB Atlas
+models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB (dev container)
 
 Errors at any layer -> asyncHandler -> middleware/errorHandler.js -> JSON error response
 ```
@@ -104,3 +105,15 @@ are required: item name, category, location, contact name and email. Description
 ### Maryamawit Gebremedhen — Found Backend
 
  For the Found backend, I decided to check all required fields and return one error message listing everything that is missing. i was chooseing between that stopping checking as soon as the first missing field was found. That would have been easier, but the user would have to keep submitting the form to find out what else was missing. the reason I chose to check all fields at once is because makes feedback more clear and makes it easier to fix the form, even though it takes a little more code.
+
+### Lenny Doiron — Lost Backend
+
+For the Lost backend, I put the required field check in lostService.js instead of adding `required: true` to the Mongoose model. The service throws a 400 that names the missing fields, so the user sees exactly what to fix. With the mongoose option, the error has no status, so our error handler would send a 500 with "Something went wrong on the server." and the user wouldn't know which field was missing.
+
+### Malachi Flynn - Foundation
+
+In server.js, I made the app connect to MongoDB before it starts listening, and exit with a clear error if the connection fails. The alternative was to start listening right away and let Mongoose connect in the background. That would start faster, but if the database was down the server would still look like it was running, and every form submission would fail with a confusing error. Connecting first means a bad connection string or a stopped database shows up immediately as "Could not connect to MongoDB" instead of later on someone's request.
+
+### Caleb Richards - Lost/Found Frontend
+
+In app.js I made the design decision to use one submit handler for both forms, which reads the URL from `form.dataset.endpoint`. The alternative to this method would be to use a separate script for each of the lost and found pages. I chose this way because it keeps all of the submit logic in one place. With two separate scripts, a fix to how errors are shown (like displaying a 400 message or a network failure) could be made on the Lost page and forgotten on the Found page, so the two forms would behave differently. With one handler, if a bug comes up or we want to change how we submit items, we only have to change it once.
