@@ -31,7 +31,10 @@ if (form) {
             emptyMessage.remove();
         }
         form.reset();
-        list.prepend(createItem(result));
+
+        const newItem = createItem(result);
+        list.prepend(newItem);
+        htmx.process(newItem);
     });
 }
 
@@ -54,5 +57,13 @@ function createItem(item) {
     addLine("Date: " + new Date(item.date).toLocaleDateString("en-US", { timeZone: "UTC" }));
     addLine("Contact name: " + item.contactName);
     addLine("Contact email: " + item.contactEmail);
+    const button = document.createElement("button"); 
+    button.type = "button";
+    button.textContent = "Delete";
+    button.setAttribute("hx-delete", form.dataset.endpoint + "/" + item._id);
+    button.setAttribute("hx-target", "closest li");
+    button.setAttribute("hx-swap", "outerHTML");
+    button.setAttribute("hx-confirm", "Delete this item?");
+    li.append(button);
     return li;
 }

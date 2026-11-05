@@ -13,3 +13,7 @@ export const handlenewitem = asyncHandler(async (req, res) => {
   const item = await foundService.addFoundItem(req.body);
   return res.status(201).json(item);
 });
+export const deleteFoundItem = asyncHandler(async (req, res) => {
+  await foundService.removeFoundItem(req.params.id);
+  return res.status(200).send("");
+});

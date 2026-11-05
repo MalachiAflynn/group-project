@@ -1,4 +1,5 @@
 import FoundItem from "../models/FoundItem.js";
+import mongoose from "mongoose";
 
 class FoundItemRepo {
   async findAll() {
@@ -20,6 +21,9 @@ class FoundItemRepo {
     });
   }
   async removeById(id) {
+    if (!mongoose.isValidObjectId(id)) {
+      return null;
+    }
     return FoundItem.findByIdAndDelete(id);
   }
 }

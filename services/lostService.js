@@ -25,3 +25,13 @@ export async function reportLostItem(body = {}) {
     date: date || new Date(),
   });
 }
+
+export async function removeLostItem(id) {
+  const deletedItem = await lostRepository.removeById(id);
+  if (deletedItem == null) {
+    const err = new Error(`Lost item not found`);
+    err.status = 404;
+    throw err;
+  }
+  return deletedItem;
+}

@@ -10,3 +10,8 @@ export const createLostItem = asyncHandler(async (req, res) => {
   const item = await lostService.reportLostItem(req.body);
   res.status(201).json(item);
 });
+
+export const deleteLostItem = asyncHandler(async (req, res) => {
+  await lostService.removeLostItem(req.params.id);
+  res.status(200).send("");
+});
