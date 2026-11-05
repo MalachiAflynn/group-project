@@ -45,11 +45,14 @@ To run the project locally:
 5. Install the required dependencies:
    `npm install`
 
-6. Start the server:
+6. Build the CSS:
+   `npm run build:css`
+
+7. Start the server:
    `npm start`
    You should see "Connected to MongoDB" in the terminal.
 
-7. Open `http://localhost:3000` in your browser.
+8. Open `http://localhost:3000` in your browser.
 
 ## System Diagram
 
@@ -72,8 +75,33 @@ repositories/lostRepository.js | foundRepository.js -> only layer that touches t
         v
 models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB (dev container)
 
+__tests__/lostService.test.js (Jest) -> runs services/lostService.js with
+                                        lostRepository mocked, so no database is used
+
+src/input.css -> Tailwind build (npm run build:css) -> public/style.css, linked by the views
+
 Errors at any layer -> asyncHandler -> middleware/errorHandler.js -> JSON error response
 ```
+
+## Sprint 3: Tests and Styling
+
+### Jest tests for the Lost service
+
+The tests are in `__tests__/lostService.test.js`. They cover the two ways `services/lostService.js` can reject something: a required field that's missing or empty (or no body at all) gets a 400, and trying to delete an item that doesn't exist gets a 404. We mock the repository with `jest.unstable_mockModule`, so you don't need MongoDB running to use them.
+
+To run them, use `npm test`.
+
+### Tailwind restyle
+
+We restyled the Lost and Found pages with Tailwind utility classes right in the views. Run `npm run build:css` to build `src/input.css` into `public/style.css`. Any styling changes should go in the views or `src/input.css`, since the build overwrites `public/style.css`.
+
+To see the layout change, open `/lost` or `/found` and resize your browser window:
+
+- **Phone (375 px):** the form sits on top of the item list, all in one column.
+- **`sm:` (640 px and up):** the short form fields sit side by side, and the items go into two columns.
+- **`lg:` (1024 px and up):** the form moves to the left, with the items next to it.
+
+The header uses UMass maroon, and each item looks like a manila tag you'd see on something in a lost and found bin.
 
 ## Features
 
@@ -109,6 +137,10 @@ are required: item name, category, location, contact name and email. Description
 ### Lenny Doiron — Lost Backend
 
 For the Lost backend, I put the required field check in lostService.js instead of adding `required: true` to the Mongoose model. The service throws a 400 that names the missing fields, so the user sees exactly what to fix. With the mongoose option, the error has no status, so our error handler would send a 500 with "Something went wrong on the server." and the user wouldn't know which field was missing.
+
+### Lenny Doiron — Lost Service Tests
+
+For the Lost service tests, I mocked the repository with `jest.unstable_mockModule` instead of connecting to a real test database. This lets the tests go straight at the service rules: each required field is checked for a 400, and deleting an item that doesn't exist is checked for a 404. With a real database, `npm test` would need MongoDB running, and a stopped database would make the tests fail even when the service code was fine.
 
 ### Malachi Flynn - Foundation
 

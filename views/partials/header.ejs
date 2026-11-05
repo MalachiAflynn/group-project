@@ -7,12 +7,14 @@
   <link rel="stylesheet" href="/style.css">
   <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="/">UMass Lost &amp; Found</a>
-    <nav>
-      <a href="/lost">Lost</a>
-      <a href="/found">Found</a>
-    </nav>
+<body class="min-h-screen bg-page text-ink antialiased">
+  <header class="bg-maroon text-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 lg:px-8">
+      <a class="text-xl font-bold whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" href="/">UMass Lost &amp; Found</a>
+      <nav class="flex gap-1">
+        <a href="/lost" class="rounded px-3 py-2 font-medium hover:bg-maroon-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Lost</a>
+        <a href="/found" class="rounded px-3 py-2 font-medium hover:bg-maroon-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Found</a>
+      </nav>
+    </div>
   </header>
-  <main>
+    <main class="mx-auto grid max-w-6xl gap-8 px-4 py-6 lg:grid-cols-[22rem_minmax(0,1fr)] lg:items-start lg:gap-10 lg:px-8 lg:py-10">
