@@ -43,6 +43,14 @@
       <p>Date: <%= item.date.toLocaleDateString("en-US", { timeZone: "UTC" }) %></p>
       <p>Contact name: <%= item.contactName %></p>
       <p>Contact email: <%= item.contactEmail %></p>
+      <button
+        type="button"
+        hx-delete="/found/<%= item._id %>"
+        hx-target="closest li"
+        hx-swap="outerHTML"
+        hx-confirm="Delete this item?">
+        Delete
+      </button>
     </li>
   <% }) %>
 </ul>
