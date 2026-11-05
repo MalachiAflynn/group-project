@@ -80,6 +80,8 @@ __tests__/lostService.test.js (Jest) -> runs services/lostService.js with
 
 src/input.css -> Tailwind build (npm run build:css) -> public/style.css, linked by the views
 
+HTMX: DELETE /lost/:id and /found/:id return an empty 200, and HTMX swaps out that item's <li>
+
 Errors at any layer -> asyncHandler -> middleware/errorHandler.js -> JSON error response
 ```
 
@@ -102,6 +104,30 @@ To see the layout change, open `/lost` or `/found` and resize your browser windo
 - **`lg:` (1024 px and up):** the form moves to the left, with the items next to it.
 
 The header uses UMass maroon, and each item looks like a manila tag you'd see on something in a lost and found bin.
+
+### MongoDB repository
+
+Both repositories now use per record operations instead of loading and saving a whole list:
+`getAll`, `findById`, `create`, `updateById` and `removeById`. These are in
+`repositories/lostRepository.js` and `repositories/foundRepository.js`, and they are still the
+only files that touch the database. Every route hits MongoDB through them:
+`GET /lost` and `GET /found` list items, `POST /lost` and `POST /found` create one, and
+`DELETE /lost/:id` and `DELETE /found/:id` remove one. An invalid id returns `null` from the
+repository, so the service sends a 404 instead of the server sending a 500.
+
+### HTMX delete
+
+Each item on the Lost and Found pages has a Delete button that uses HTMX instead of a full page
+reload. The button has `hx-delete="/lost/<id>"` (or `/found/<id>`), and the server responds with
+an empty 200, so HTMX swaps that one item out of the list. To see it, open `/lost` or `/found`
+and click Delete on an item. It disappears without the page reloading.
+
+### The honest exception
+
+Swapping the repository did not require changing other layers, with one exception: the views
+and client JS now need the real MongoDB id. The Delete buttons in `views/lost.ejs`,
+`views/found.ejs` and new items created in `public/app.js` use `item._id` to build the
+`hx-delete` URL, since there is no list position to use.
 
 ## Features
 
@@ -149,3 +175,6 @@ In server.js, I made the app connect to MongoDB before it starts listening, and 
 ### Caleb Richards - Lost/Found Frontend
 
 In app.js I made the design decision to use one submit handler for both forms, which reads the URL from `form.dataset.endpoint`. The alternative to this method would be to use a separate script for each of the lost and found pages. I chose this way because it keeps all of the submit logic in one place. With two separate scripts, a fix to how errors are shown (like displaying a 400 message or a network failure) could be made on the Lost page and forgotten on the Found page, so the two forms would behave differently. With one handler, if a bug comes up or we want to change how we submit items, we only have to change it once.
+
+### Malachi Flynn - Sprint 3 Lost Repository
+For updateById in the Lost repository, I passed two options to Mongoose's findByIdAndUpdate: returnDocument "after" and runValidators true. The alternative was to use the defaults, which is less code. But by default Mongoose returns the item as it was before the update, so anything that shows the result, like a future "mark as claimed" button, would show old data right after a change. Mongoose also skips schema checks on updates by default, so an update could save a value the schema would reject on create. Setting both options means updateById returns what is actually in the database and follows the same rules as create. The cost is that an update with a bad value now fails instead of quietly saving, so the service will need to handle that error.
