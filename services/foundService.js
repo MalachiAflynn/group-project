@@ -38,6 +38,16 @@ class FoundItmService {
 
     return foundRepository.create(data);
   }
+  
+  async removeFoundItem(id) {
+    const deletedItem = await foundRepository.removeById(id);
+    if (deletedItem == null) {
+      const err = new Error("Found item not found");
+      err.status = 404;
+      throw err;
+    }
+    return deletedItem;
+  }
 }
 
 export default new FoundItmService();
