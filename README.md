@@ -77,6 +77,8 @@ models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB (dev container)
 
 __tests__/lostService.test.js (Jest) -> runs services/lostService.js with
                                         lostRepository mocked, so no database is used
+__tests__/foundServiceRules.test.js (Jest) -> runs services/foundService.js with
+                                              foundRepository mocked
 
 src/input.css -> Tailwind build (npm run build:css) -> public/style.css, linked by the views
 
@@ -88,6 +90,8 @@ Errors at any layer -> asyncHandler -> middleware/errorHandler.js -> JSON error 
 ### Jest tests for the Lost service
 
 The tests are in `__tests__/lostService.test.js`. They cover the two ways `services/lostService.js` can reject something: a required field that's missing or empty (or no body at all) gets a 400, and trying to delete an item that doesn't exist gets a 404. We mock the repository with `jest.unstable_mockModule`, so you don't need MongoDB running to use them.
+
+The Found service tests in `__tests__/foundServiceRules.test.js` cover the Found rules the same way: a required field that is only spaces gets a 400, and deleting a found item that doesn't exist gets a 404.
 
 To run them, use `npm test`.
 
