@@ -104,7 +104,7 @@ are required: item name, category, location, contact name and email. Description
 
 ### Maryamawit Gebremedhen — Found Backend
 
- For the Found backend, I decided to check all required fields and return one error message listing everything that is missing. i was chooseing between that stopping checking as soon as the first missing field was found. That would have been easier, but the user would have to keep submitting the form to find out what else was missing. the reason I chose to check all fields at once is because makes feedback more clear and makes it easier to fix the form, even though it takes a little more code.
+ For the Found backend, I chose to check all required fields and return one error message listing everything that is missing. i was chooseing between that stopping checking as soon as the first missing field was found. That would have been easier, but the user would have to keep submitting the form to find out what else was missing. the reason I chose to check all fields at once is because makes feedback more clear and makes it easier to fix the form, even though it takes a little more code.
 
 ### Lenny Doiron — Lost Backend
 
@@ -117,3 +117,7 @@ In server.js, I made the app connect to MongoDB before it starts listening, and 
 ### Caleb Richards - Lost/Found Frontend
 
 In app.js I made the design decision to use one submit handler for both forms, which reads the URL from `form.dataset.endpoint`. The alternative to this method would be to use a separate script for each of the lost and found pages. I chose this way because it keeps all of the submit logic in one place. With two separate scripts, a fix to how errors are shown (like displaying a 400 message or a network failure) could be made on the Lost page and forgotten on the Found page, so the two forms would behave differently. With one handler, if a bug comes up or we want to change how we submit items, we only have to change it once.
+
+### Sprint 3 — Maryamawit Gebremedhen
+
+I added CRUD operations to found repository using mongoose. I kept the database operations in the repository. For fewer files to work with, I had the option to put everything in the service but keeping them seperate lets the service focus on validation. Additionally, I added jest tests and used a mock repository so I could test the service without having to connect with MongoDb.
