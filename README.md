@@ -146,10 +146,14 @@ For the Lost service tests, I mocked the repository with `jest.unstable_mockModu
 
 In server.js, I made the app connect to MongoDB before it starts listening, and exit with a clear error if the connection fails. The alternative was to start listening right away and let Mongoose connect in the background. That would start faster, but if the database was down the server would still look like it was running, and every form submission would fail with a confusing error. Connecting first means a bad connection string or a stopped database shows up immediately as "Could not connect to MongoDB" instead of later on someone's request.
 
-### Caleb Richards - Lost/Found Frontend
+### Sprint 2: Caleb Richards - Lost/Found Frontend
 
 In app.js I made the design decision to use one submit handler for both forms, which reads the URL from `form.dataset.endpoint`. The alternative to this method would be to use a separate script for each of the lost and found pages. I chose this way because it keeps all of the submit logic in one place. With two separate scripts, a fix to how errors are shown (like displaying a 400 message or a network failure) could be made on the Lost page and forgotten on the Found page, so the two forms would behave differently. With one handler, if a bug comes up or we want to change how we submit items, we only have to change it once.
 
 ### Sprint 3 — Maryamawit Gebremedhen
 
 I added CRUD operations to found repository using mongoose. I kept the database operations in the repository. For fewer files to work with, I had the option to put everything in the service but keeping them seperate lets the service focus on validation. Additionally, I added jest tests and used a mock repository so I could test the service without having to connect with MongoDb.
+
+### Sprint 3: Caleb Richards - HTMX Feature
+
+In found.ejs I made the design decision to add an HTMX delete button that uses the item's MongoDB `_id` and has the server send back an empty 200, so `hx-target="closest li"` and `hx-swap="outerHTML"` remove the item that was clicked. A different approach to this would to have the delete route render the whole list again and swap the entire `<ul>`. I chose this way because when you delete an item only that one item changes. There is no reason to rebuild the rest of the page. If I went with that way, every delete would need an extra `findAll()` query to MongoDB and we would have to make a separate partial template for the list that both the page and the route share. With the empty response, the controller stays one line and the rest of the list is left alone.
