@@ -4,9 +4,10 @@
   "description": "| Name | GitHub Username |\r |------|-----------------|\r | Malachi Flynn | [@MalachiAflynn](https://github.com/MalachiAflynn) |\r | Caleb Richards | [@CalebUmass](https://github.com/CalebUmass) |\r | Maryamawit Gebremedhen | [@gebremedhen-mari](https://github.com/gebremedhen-mari) |\r | Lenny Doiron | [@LennartDoiron](https://github.com/LennartDoiron) |",
   "main": "index.js",
   "scripts": {
-  "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-  "start": "node server.js"
-},
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "start": "node server.js",
+    "build:css": "tailwindcss -i ./src/input.css -o ./public/style.css --minify"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MalachiAflynn/group-project.git"
@@ -26,6 +27,12 @@
     "mongoose": "^9.11.2"
   },
   "devDependencies": {
-    "jest": "^30.5.2"
+    "@tailwindcss/cli": "^4.3.4",
+    "jest": "^30.5.2",
+    "tailwindcss": "^4.3.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
   }
 }

@@ -40,12 +40,18 @@ if (form) {
 
 function createItem(item) {
     const li = document.createElement("li");
-    li.classList.add("item");
+    li.className = "relative flex min-w-0 flex-col gap-1 border border-tag-edge bg-tag p-4 wrap-anywhere [clip-path:polygon(1.25rem_0,100%_0,100%_100%,0_100%,0_1.25rem)]";
+    const hole = document.createElement("span");
+    hole.setAttribute("aria-hidden", "true");
+    hole.className = "absolute top-5 left-4 size-3 rounded-full bg-page";
+    li.append(hole);
     const h3 = document.createElement("h3");
+    h3.className = "pl-5 text-xl font-bold";
     h3.textContent = item.title;
     li.append(h3);
-    const addLine = (text) => {
+    const addLine = (text, className = "") => {
         const p = document.createElement("p");
+        p.className = className;
         p.textContent = text;
         li.append(p);
     };
@@ -56,9 +62,10 @@ function createItem(item) {
     addLine("Location: " + item.location);
     addLine("Date: " + new Date(item.date).toLocaleDateString("en-US", { timeZone: "UTC" }));
     addLine("Contact name: " + item.contactName);
-    addLine("Contact email: " + item.contactEmail);
+    addLine("Contact email: " + item.contactEmail, "mb-2");
     const button = document.createElement("button"); 
     button.type = "button";
+    button.className = "mt-auto cursor-pointer self-start rounded border border-maroon px-3 py-1.5 font-medium text-maroon hover:bg-maroon hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon";
     button.textContent = "Delete";
     button.setAttribute("hx-delete", form.dataset.endpoint + "/" + item._id);
     button.setAttribute("hx-target", "closest li");

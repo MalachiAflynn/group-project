@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+
+@theme {
+  --color-maroon: #881c1c;
+  --color-maroon-dark: #5f1313;
+  --color-tag: #f1dfae;
+  --color-tag-edge: #c9b27a;
+  --color-ink: #231c1a;
+  --color-page: #e9ecee;
+}

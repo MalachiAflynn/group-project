@@ -1,58 +1,64 @@
 <%- include("partials/header") %>
 
-<h1>Report a found item</h1>
+<section>
+  <h1 class="text-3xl font-bold text-maroon">Report a found item</h1>
 
-<form id="report-form" data-endpoint="/found">
-  <label>Item name <input name="title" required></label>
-  <label>Description <textarea name="description"></textarea></label>
-  <label>Category
-    <select name="category" required>
-      <option value="">Choose one</option>
-      <option>Electronics</option>
-      <option>Clothing</option>
-      <option>ID/Cards</option>
-      <option>Keys</option>
-      <option>Bags</option>
-      <option>Other</option>
-    </select>
-  </label>
-  <label>Where you found it <input name="location" required></label>
-  <label>Date <input type="date" name="date"></label>
-  <label>Your name <input name="contactName" required></label>
-  <label>Your email <input type="email" name="contactEmail" required></label>
-  <button type="submit">Submit</button>
-</form>
+  <form id="report-form" data-endpoint="/found" class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+    <label class="block font-medium sm:col-span-2 lg:col-span-1">Item name <input name="title" required class="mt-1 block w-full rounded border border-ink/40 bg-white px-3 py-2 text-base font-normal focus:border-maroon focus:outline-2 focus:outline-maroon"></label>
+    <label class="block font-medium sm:col-span-2 lg:col-span-1">Description <textarea name="description" class="mt-1 block w-full rounded border border-ink/40 bg-white px-3 py-2 text-base font-normal focus:border-maroon focus:outline-2 focus:outline-maroon"></textarea></label>
+    <label class="block font-medium">Category
+      <select name="category" required class="mt-1 block w-full rounded border border-ink/40 bg-white px-3 py-2 text-base font-normal focus:border-maroon focus:outline-2 focus:outline-maroon">
+        <option value="">Choose one</option>
+        <option>Electronics</option>
+        <option>Clothing</option>
+        <option>ID/Cards</option>
+        <option>Keys</option>
+        <option>Bags</option>
+        <option>Other</option>
+      </select>
+    </label>
+    <label class="block font-medium">Where you found it <input name="location" required class="mt-1 block w-full rounded border border-ink/40 bg-white px-3 py-2 text-base font-normal focus:border-maroon focus:outline-2 focus:outline-maroon"></label>
+    <label class="block font-medium">Date <input type="date" name="date" class="mt-1 block w-full rounded border border-ink/40 bg-white px-3 py-2 text-base font-normal focus:border-maroon focus:outline-2 focus:outline-maroon"></label>
+    <label class="block font-medium">Your name <input name="contactName" required class="mt-1 block w-full rounded border border-ink/40 bg-white px-3 py-2 text-base font-normal focus:border-maroon focus:outline-2 focus:outline-maroon"></label>
+    <label class="block font-medium sm:col-span-2 lg:col-span-1">Your email <input type="email" name="contactEmail" required class="mt-1 block w-full rounded border border-ink/40 bg-white px-3 py-2 text-base font-normal focus:border-maroon focus:outline-2 focus:outline-maroon"></label>
+    <button type="submit" class="cursor-pointer rounded bg-maroon px-4 py-3 font-semibold text-white hover:bg-maroon-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon sm:col-span-2 lg:col-span-1">Submit</button>
+  </form>
 
-<div id="form-message" class="error" aria-live="polite"></div>
+  <div id="form-message" class="mt-3 font-medium text-red-800" aria-live="polite"></div>
+</section>
 
-<h2>Found items</h2>
+<section class="min-w-0">
+  <h2 class="text-2xl font-bold">Found items</h2>
 
-<% if (items.length === 0) { %>
-  <p id="empty-message">No found items reported yet.</p>
-<% } %>
+  <% if (items.length === 0) { %>
+    <p id="empty-message" class="mt-4">No found items reported yet.</p>
+  <% } %>
 
-<ul id="item-list">
-  <% items.forEach((item) => { %>
-    <li class="item">
-      <h3><%= item.title %></h3>
-      <p>Category: <%= item.category %></p>
-      <% if (item.description) { %>
-        <p>Description: <%= item.description %></p>
-      <% } %>
-      <p>Location: <%= item.location %></p>
-      <p>Date: <%= item.date.toLocaleDateString("en-US", { timeZone: "UTC" }) %></p>
-      <p>Contact name: <%= item.contactName %></p>
-      <p>Contact email: <%= item.contactEmail %></p>
-      <button
-        type="button"
-        hx-delete="/found/<%= item._id %>"
-        hx-target="closest li"
-        hx-swap="outerHTML"
-        hx-confirm="Delete this item?">
-        Delete
-      </button>
-    </li>
-  <% }) %>
-</ul>
+  <ul id="item-list" class="mt-5 grid gap-4 sm:grid-cols-2">
+    <% items.forEach((item) => { %>
+      <li class="relative flex min-w-0 flex-col gap-1 border border-tag-edge bg-tag p-4 wrap-anywhere [clip-path:polygon(1.25rem_0,100%_0,100%_100%,0_100%,0_1.25rem)]">
+        <span aria-hidden="true" class="absolute top-5 left-4 size-3 rounded-full bg-page"></span>
+        <h3 class="pl-5 text-xl font-bold"><%= item.title %></h3>
+        <p>Category: <%= item.category %></p>
+        <% if (item.description) { %>
+          <p>Description: <%= item.description %></p>
+        <% } %>
+        <p>Location: <%= item.location %></p>
+        <p>Date: <%= item.date.toLocaleDateString("en-US", { timeZone: "UTC" }) %></p>
+        <p>Contact name: <%= item.contactName %></p>
+        <p class="mb-2">Contact email: <%= item.contactEmail %></p>
+        <button
+          type="button"
+          class="mt-auto cursor-pointer self-start rounded border border-maroon px-3 py-1.5 font-medium text-maroon hover:bg-maroon hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-maroon"
+          hx-delete="/found/<%= item._id %>"
+          hx-target="closest li"
+          hx-swap="outerHTML"
+          hx-confirm="Delete this item?">
+          Delete
+        </button>
+      </li>
+    <% }) %>
+  </ul>
+</section>
 
 <%- include("partials/footer") %>
