@@ -3,3 +3,8 @@
 -Claude walked me through setting up MongoDB Atlas: creating the database user, getting the connection string, setting up .env and fixing the IP access list. sprint 2
 -Claude helped me write the System Diagram in the readme. sprint 2
 -I used Claude as a reference for terminal and Git commands. sprint 2
+-I used Claude to go over the Jest test examples from class, which I used as a guide for writing the Found service tests. sprint 3
+-I used Claude to go over the class example of mocking the repository, so the tests run without MongoDB. sprint 3
+-I used Claude to look up how test.each works, so I could run the same "only spaces" test for every required field. sprint 3
+-I used Claude to look up jest.unstable_mockModule, mockResolvedValue and mockReset for setting up and resetting the mock repository. sprint 3
+-I used Claude to look up rejects, resolves and toMatchObject for checking the 400 and 404 errors. sprint 3
