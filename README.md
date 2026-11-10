@@ -182,7 +182,7 @@ In app.js I made the design decision to use one submit handler for both forms, w
 
 ### Sprint 3 — Maryamawit Gebremedhen
 
-I added CRUD operations to found repository using mongoose. I kept the database operations in the repository. For fewer files to work with, I had the option to put everything in the service but keeping them seperate lets the service focus on validation. Additionally, I added jest tests and used a mock repository so I could test the service without having to connect with MongoDb.
+I added CRUD operations to the Found repository using Mongoose. Instead of putting the database operations directly into the service layer, I decided to keep them in the repository. The reason I went with this option was that I could test the Found service by mocking the repository without needing a live MongoDB connection. Also, putting the database logic in the service would have made testing harder because I would've to connect to an actual database or mock Mongoose.
 
 ### Sprint 3: Caleb Richards - HTMX Feature
 
