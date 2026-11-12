@@ -74,11 +74,18 @@ repositories/lostRepository.js | foundRepository.js -> only layer that touches t
         |
         v
 models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB (dev container)
+db.js -> connectDB() opens the Mongoose connection (MONGODB_URI), called by server.js at startup
+
 
 __tests__/lostService.test.js (Jest) -> runs services/lostService.js with
-                                        lostRepository mocked, so no database is used
+                                          lostRepository mocked, so no database is used
+                                          
 __tests__/foundServiceRules.test.js (Jest) -> runs services/foundService.js with
-                                              foundRepository mocked
+                                          foundRepository mocked
+
+tests/foundService.test.js (Jest) -> runs services/foundService.js with
+                                          foundRepository mocked (whitespace fields, delete 404)
+
 
 src/input.css -> Tailwind build (npm run build:css) -> public/style.css, linked by the views
 
