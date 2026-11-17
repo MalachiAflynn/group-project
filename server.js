@@ -3,6 +3,7 @@ import express from "express";
 import connectDB from "./db.js";
 import lostRoutes from "./routes/lost.js";
 import foundRoutes from "./routes/found.js";
+import authRoutes from "./routes/auth.js"
 import errorHandler from "./middleware/errorHandler.js";
 import session from "express-session";
 import { MongoStore } from "connect-mongo";
@@ -39,6 +40,7 @@ app.use(express.static("public"));
 app.get("/", (req, res) => res.redirect("/lost"));
 app.use("/lost", lostRoutes);
 app.use("/found", foundRoutes);
+app.use("/", authRoutes);
 
 app.use(errorHandler);
 
