@@ -142,8 +142,6 @@ and client JS now need the real MongoDB id. The Delete buttons in `views/lost.ej
 `views/found.ejs` and new items created in `public/app.js` use `item._id` to build the
 `hx-delete` URL, since there is no list position to use.
 
-## Features
-
 ## Sprint 4: Login, Authorization, Accessibility and Health Check
 
 ### Signing up and logging in
@@ -173,6 +171,8 @@ curl -i -w '\n' http://localhost:3000/health
 You should see `200 OK`, `Content-Type: application/json`, and `{"status":"ok"}` at the bottom. On Windows PowerShell, use `curl.exe` instead of `curl`.
 
 The route is set up at the top of `server.js`, before any of the login code, so it always works. `npm test` also runs a test for it in `__tests__/healthController.test.js`.
+
+## Features
 
 Lost is for someone who lost something. They post what it is and where they lost it, so a finder can contact them.
 Found is for someone who found something. They post what they picked up, so the owner can contact them.
