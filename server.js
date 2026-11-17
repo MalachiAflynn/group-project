@@ -1,12 +1,14 @@
 import "dotenv/config";
 import express from "express";
 import connectDB from "./db.js";
+import healthRoutes from "./routes/health.js";
 import lostRoutes from "./routes/lost.js";
 import foundRoutes from "./routes/found.js";
 import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use("/health", healthRoutes);
 
 app.set("view engine", "ejs");
 app.use(express.json());
