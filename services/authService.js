@@ -40,7 +40,32 @@ export async function signUp(body = {}) {
     const newUser = await usersRepository.createUser(username, hashedPassword);
 
     return userDTO.userInfo(newUser);
+}
 
+export async function login(body = {}) {
+    const { username, password } = body;
 
+    if (((typeof username) !== "string") || ((typeof password) !== "string")) {
+        const err = new Error('Username or password invalid');
+        err.status = 401;
+        throw err;
+    }
+
+    const user = await usersRepository.findByUsername(username);
+    if (!user) {
+        const err = new Error('Username or password invalid');
+        err.status = 401;
+        throw err;
+    }
+
+    const passCheck = await bcrypt.compare(password, user.passwordHash);
+
+    if (!passCheck) {
+        const err = new Error('Username or password invalid');
+        err.status = 401;
+        throw err;
+    }
+
+    return userDTO.userInfo(user); 
 }
 
