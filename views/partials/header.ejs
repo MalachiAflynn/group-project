@@ -11,9 +11,18 @@
   <header class="bg-maroon text-white">
     <div class="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 lg:px-8">
       <a class="text-xl font-bold whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" href="/">UMass Lost &amp; Found</a>
-      <nav class="flex gap-1">
+      <nav class="flex flex-wrap items-center gap-1">
         <a href="/lost" class="rounded px-3 py-2 font-medium hover:bg-maroon-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Lost</a>
         <a href="/found" class="rounded px-3 py-2 font-medium hover:bg-maroon-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Found</a>
+        <% if (user) { %>
+          <span class="px-3 py-2">Logged in as <strong><%= user.username %></strong></span>
+          <form method="POST" action="/logout">
+            <button type="submit" class="cursor-pointer rounded px-3 py-2 font-medium hover:bg-maroon-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Log out</button>
+          </form>
+        <% } else { %>
+          <a href="/login" class="rounded px-3 py-2 font-medium hover:bg-maroon-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Log in</a>
+          <a href="/signup" class="rounded px-3 py-2 font-medium hover:bg-maroon-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Sign up</a>
+        <% } %>
       </nav>
     </div>
   </header>
