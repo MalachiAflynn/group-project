@@ -7,11 +7,11 @@ export const showLostPage = asyncHandler(async (req, res) => {
 });
  
 export const createLostItem = asyncHandler(async (req, res) => {
-  const item = await lostService.reportLostItem(req.body);
+  const item = await lostService.reportLostItem(req.body, req.session.user);
   res.status(201).json(item);
 });
 
 export const deleteLostItem = asyncHandler(async (req, res) => {
-  await lostService.removeLostItem(req.params.id);
+  await lostService.removeLostItem(req.params.id, req.session.user);
   res.status(200).send("");
 });

@@ -38,6 +38,25 @@ if (form) {
     });
 }
 
+// HTMX doesn't swap on an error, so the item stays put. Show the server's error
+// (like a 403 "You can only delete lost items you posted") so the click doesn't look like it did nothing.
+document.addEventListener("htmx:afterRequest", (event) => {
+    if (!message) {
+        return;
+    }
+    if (event.detail.successful) {
+        message.textContent = "";
+        return;
+    }
+    let error = "Something went wrong. Please try again.";
+    try {
+        error = JSON.parse(event.detail.xhr.responseText).error || error;
+    } catch {
+        // response wasn't JSON, keep the general message
+    }
+    message.textContent = error;
+});
+
 function createItem(item) {
     const li = document.createElement("li");
     li.className = "relative flex min-w-0 flex-col gap-1 border border-tag-edge bg-tag p-4 wrap-anywhere [clip-path:polygon(1.25rem_0,100%_0,100%_100%,0_100%,0_1.25rem)]";
