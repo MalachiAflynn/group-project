@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import connectDB from "./db.js";
+import healthRoutes from "./routes/health.js";
 import lostRoutes from "./routes/lost.js";
 import foundRoutes from "./routes/found.js";
 import authRoutes from "./routes/auth.js"
@@ -15,6 +16,7 @@ if (!process.env.SESSION_SECRET) {
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use("/health", healthRoutes);
 
 app.set("view engine", "ejs");
 app.use(express.json());

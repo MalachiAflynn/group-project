@@ -1,15 +1,13 @@
 # Group Project
 
-
 ## Team Roster
 
-| Name | GitHub Username |
-|------|-----------------|
-| Malachi Flynn | [@MalachiAflynn](https://github.com/MalachiAflynn) |
-| Caleb Richards | [@CalebUmass](https://github.com/CalebUmass) |
+| Name                   | GitHub Username                                          |
+| ---------------------- | -------------------------------------------------------- |
+| Malachi Flynn          | [@MalachiAflynn](https://github.com/MalachiAflynn)       |
+| Caleb Richards         | [@CalebUmass](https://github.com/CalebUmass)             |
 | Maryamawit Gebremedhen | [@gebremedhen-mari](https://github.com/gebremedhen-mari) |
-| Lenny Doiron | [@LennartDoiron](https://github.com/LennartDoiron) |
-
+| Lenny Doiron           | [@LennartDoiron](https://github.com/LennartDoiron)       |
 
 ## Working Agreement
 
@@ -76,15 +74,19 @@ repositories/lostRepository.js | foundRepository.js -> only layer that touches t
 models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB (dev container)
 db.js -> connectDB() opens the Mongoose connection (MONGODB_URI), called by server.js at startup
 
+GET /health -> routes/health.js -> controllers/healthController.js -> {"status":"ok"}
+               (set up before the login code, so no login needed)
 
 __tests__/lostService.test.js (Jest) -> runs services/lostService.js with
                                           lostRepository mocked, so no database is used
-                                          
+
 __tests__/foundServiceRules.test.js (Jest) -> runs services/foundService.js with
                                           foundRepository mocked
 
 tests/foundService.test.js (Jest) -> runs services/foundService.js with
                                           foundRepository mocked (whitespace fields, delete 404)
+
+__tests__/healthController.test.js (Jest) -> tests getHealth, no database needed
 
 
 src/input.css -> Tailwind build (npm run build:css) -> public/style.css, linked by the views
@@ -140,6 +142,36 @@ and client JS now need the real MongoDB id. The Delete buttons in `views/lost.ej
 `views/found.ejs` and new items created in `public/app.js` use `item._id` to build the
 `hx-delete` URL, since there is no list position to use.
 
+## Sprint 4: Login, Authorization, Accessibility and Health Check
+
+### Signing up and logging in
+
+_TODO: add once the auth PR is merged._
+
+### Making an admin account
+
+_TODO: add once the auth PR is merged._
+
+### Testing the authorization rule
+
+_TODO: add once the auth PR is merged._
+
+### Accessibility audit
+
+_TODO: add once the audit is done._
+
+### Health check
+
+`GET /health` sends back `{"status":"ok"}` so you can check that the app is running. You don't need to be logged in. Start the server and run:
+
+```bash
+curl -i -w '\n' http://localhost:3000/health
+```
+
+You should see `200 OK`, `Content-Type: application/json`, and `{"status":"ok"}` at the bottom. On Windows PowerShell, use `curl.exe` instead of `curl`.
+
+The route is set up at the top of `server.js`, before any of the login code, so it always works. `npm test` also runs a test for it in `__tests__/healthController.test.js`.
+
 ## Features
 
 Lost is for someone who lost something. They post what it is and where they lost it, so a finder can contact them.
@@ -148,17 +180,17 @@ Both pages show every report so people who have lost/found items can contact eac
 
 ### Routes
 
-| Method | Path     | What it does |
-|--------|----------|--------------|
-| GET    | `/`      | Redirects to `/lost`. |
-| GET    | `/lost`  | Shows the Lost page with the report form and all lost items, newest being first. |
-| POST   | `/lost`  | Saves a lost item. Returns `201` with the saved item, or `400` with an error message if a required field is missing. |
-| GET    | `/found` | Shows the Found page with the report form and all found items, newest being first. |
+| Method | Path     | What it does                                                                                                          |
+| ------ | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/`      | Redirects to `/lost`.                                                                                                 |
+| GET    | `/lost`  | Shows the Lost page with the report form and all lost items, newest being first.                                      |
+| POST   | `/lost`  | Saves a lost item. Returns `201` with the saved item, or `400` with an error message if a required field is missing.  |
+| GET    | `/found` | Shows the Found page with the report form and all found items, newest being first.                                    |
 | POST   | `/found` | Saves a found item. Returns `201` with the saved item, or `400` with an error message if a required field is missing. |
 
 ### The Form
 
-There are seven fields to fill out in the form. There are five which 
+There are seven fields to fill out in the form. There are five which
 are required: item name, category, location, contact name and email. Description and Date are optional. In addition, an empty date becomes today.
 
 ### After You Submit
@@ -169,7 +201,7 @@ are required: item name, category, location, contact name and email. Description
 
 ### Maryamawit Gebremedhen — Found Backend
 
- For the Found backend, I chose to check all required fields and return one error message listing everything that is missing. i was chooseing between that stopping checking as soon as the first missing field was found. That would have been easier, but the user would have to keep submitting the form to find out what else was missing. the reason I chose to check all fields at once is because makes feedback more clear and makes it easier to fix the form, even though it takes a little more code.
+For the Found backend, I chose to check all required fields and return one error message listing everything that is missing. i was chooseing between that stopping checking as soon as the first missing field was found. That would have been easier, but the user would have to keep submitting the form to find out what else was missing. the reason I chose to check all fields at once is because makes feedback more clear and makes it easier to fix the form, even though it takes a little more code.
 
 ### Lenny Doiron — Lost Backend
 
@@ -178,6 +210,10 @@ For the Lost backend, I put the required field check in lostService.js instead o
 ### Lenny Doiron — Lost Service Tests
 
 For the Lost service tests, I mocked the repository with `jest.unstable_mockModule` instead of connecting to a real test database. This lets the tests go straight at the service rules: each required field is checked for a 400, and deleting an item that doesn't exist is checked for a 404. With a real database, `npm test` would need MongoDB running, and a stopped database would make the tests fail even when the service code was fine.
+
+### Lenny Doiron — Sprint 4 Health Check
+
+I put `GET /health` at the top of `server.js`, before the session middleware and `requireLogin`. The other option was to put it with the rest of the routes and add an exception for `/health` inside `requireLogin`. That would keep all the routes together, but every health check would go through the session store and hit MongoDB just to say the app is running. The exception would also be easy to break, since someone changing `requireLogin` later might not know the health check depends on it. Putting it first means it never needs a login and never touches the database.
 
 ### Malachi Flynn - Foundation
 
@@ -196,4 +232,5 @@ I added CRUD operations to the Found repository using Mongoose. Instead of putti
 In found.ejs I made the design decision to add an HTMX delete button that uses the item's MongoDB `_id` and has the server send back an empty 200, so `hx-target="closest li"` and `hx-swap="outerHTML"` remove the item that was clicked. A different approach to this would to have the delete route render the whole list again and swap the entire `<ul>`. I chose this way because when you delete an item only that one item changes. There is no reason to rebuild the rest of the page. If I went with that way, every delete would need an extra `findAll()` query to MongoDB and we would have to make a separate partial template for the list that both the page and the route share. With the empty response, the controller stays one line and the rest of the list is left alone.
 
 ### Malachi Flynn - Sprint 3 Lost Repository
+
 For updateById in the Lost repository, I passed two options to Mongoose's findByIdAndUpdate: returnDocument "after" and runValidators true. The alternative was to use the defaults, which is less code. But by default Mongoose returns the item as it was before the update, so anything that shows the result, like a future "mark as claimed" button, would show old data right after a change. Mongoose also skips schema checks on updates by default, so an update could save a value the schema would reject on create. Setting both options means updateById returns what is actually in the database and follows the same rules as create. The cost is that an update with a bad value now fails instead of quietly saving, so the service will need to handle that error.
