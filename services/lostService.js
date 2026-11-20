@@ -1,4 +1,5 @@
 import * as lostRepository from "../repositories/lostRepository.js";
+import { isOwnerOrAdmin } from "./ownership.js";
 
 const REQUIRED_FIELDS = ["title", "category", "location", "contactName", "contactEmail"];
 
@@ -25,13 +26,6 @@ export async function reportLostItem(body = {}, user) {
     date: date || new Date(),
     owner: user.id,
   });
-}
-
-export function isOwnerOrAdmin(user, item) {
-  if (user.role === "admin") {
-    return true;
-  }
-  return item.owner != null && item.owner.toString() === user.id;
 }
 
 export async function removeLostItem(id, user) {

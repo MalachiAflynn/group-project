@@ -9,6 +9,9 @@ class FoundItemRepo {
     return this.findAll();
   }
   async findById(id) {
+    if (!mongoose.isValidObjectId(id)) {
+      return null;
+    }
     return FoundItem.findById(id);
   }
   async create(data) {
