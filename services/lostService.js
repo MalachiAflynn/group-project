@@ -6,7 +6,7 @@ export async function listLostItems() {
   return lostRepository.findAll();
 }
 
-export async function reportLostItem(body = {}) {
+export async function reportLostItem(body = {}, user) {
   const missing = REQUIRED_FIELDS.filter((field) => !body[field]);
   if (missing.length > 0) {
     const err = new Error(`Missing required field(s): ${missing.join(", ")}`);
@@ -23,15 +23,30 @@ export async function reportLostItem(body = {}) {
     contactName,
     contactEmail,
     date: date || new Date(),
+    owner: user.id,
   });
 }
 
-export async function removeLostItem(id) {
-  const deletedItem = await lostRepository.removeById(id);
-  if (deletedItem == null) {
+export function isOwnerOrAdmin(user, item) {
+  if (user.role === "admin") {
+    return true;
+  }
+  return item.owner != null && item.owner.toString() === user.id;
+}
+
+export async function removeLostItem(id, user) {
+  const item = await lostRepository.findById(id);
+  if (item == null) {
     const err = new Error(`Lost item not found`);
     err.status = 404;
     throw err;
   }
-  return deletedItem;
+
+  if (!isOwnerOrAdmin(user, item)) {
+    const err = new Error("You can only delete lost items you posted");
+    err.status = 403;
+    throw err;
+  }
+
+  return lostRepository.removeById(id);
 }

@@ -9,6 +9,7 @@ const lostItemSchema = new mongoose.Schema(
     date: Date,
     contactName: String,
     contactEmail: String,
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
