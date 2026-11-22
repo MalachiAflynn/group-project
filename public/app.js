@@ -2,6 +2,18 @@ const form = document.getElementById("report-form");
 const message = document.getElementById("form-message");
 const list = document.getElementById("item-list");
 const emptyMessage = document.getElementById("empty-message");
+const dateInput = form?.querySelector('input[name="date"]');
+
+if (dateInput) {
+    const current = new Date();
+    const localDate = [
+        current.getFullYear(),
+        String(current.getMonth() + 1).padStart(2, "0"),
+        String(current.getDate()).padStart(2, "0")
+    ].join("-");
+
+    dateInput.max = localDate;
+}
 
 if (form) {
     form.addEventListener("submit", async (event) => {
