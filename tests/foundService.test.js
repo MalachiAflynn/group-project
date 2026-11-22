@@ -5,6 +5,7 @@ jest.unstable_mockModule("../repositories/foundRepository.js", () => ({
   default: { create: mockAdd },
 }));
 const { default: svc } = await import("../services/foundService.js");
+const user = { id: "user-a", username: "mari", role: "member" };
 test("rejects a found item without a title", async () => {
   const item = {
     category: "Electronics",
@@ -29,7 +30,7 @@ test("adds valid found item", async () => {
   };
   const svd = { ...item, _id: "123" };
   mockAdd.mockResolvedValue(svd);
-  const rst = await svc.addFoundItem(item);
+  const rst = await svc.addFoundItem(item, user);
   expect(mockAdd).toHaveBeenCalledTimes(1);
   expect(mockAdd).toHaveBeenCalledWith(
     expect.objectContaining(item)
@@ -66,7 +67,7 @@ test("adds a date if missing", async () => {
   };
 
   mockAdd.mockImplementation(async (data) => data);
-  const svd = await svc.addFoundItem(item);
+  const svd = await svc.addFoundItem(item, user);
   expect(svd.date).toBeInstanceOf(Date);
   expect(mockAdd).toHaveBeenCalledTimes(1);
 });

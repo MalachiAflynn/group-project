@@ -10,10 +10,10 @@ export const getFoundItems = asyncHandler(async (req, res) => {
   });
 });
 export const handlenewitem = asyncHandler(async (req, res) => {
-  const item = await foundService.addFoundItem(req.body);
+  const item = await foundService.addFoundItem(req.body, req.session.user);
   return res.status(201).json(item);
 });
 export const deleteFoundItem = asyncHandler(async (req, res) => {
-  await foundService.removeFoundItem(req.params.id);
+  await foundService.removeFoundItem(req.params.id, req.session.user);
   return res.status(200).send("");
 });
