@@ -74,3 +74,20 @@ function createItem(item) {
     li.append(button);
     return li;
 }
+
+document.body.addEventListener("htmx:beforeSwap", (event) => {
+    const itm = event.detail.target;
+    if (!event.detail.shouldSwap || event.detail.isError) return;
+    if (!itm.matches("#item-list > li")) return;
+    const nextFocus =
+        itm.nextElementSibling?.querySelector("button") ||
+        itm.previousElementSibling?.querySelector("button") ||
+        form?.querySelector("input")
+    setTimeout(() => {
+        if (!itm.isConnected) {
+            nextFocus?.focus();
+        }
+
+    }, 100);
+
+});
