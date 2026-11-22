@@ -146,7 +146,28 @@ and client JS now need the real MongoDB id. The Delete buttons in `views/lost.ej
 
 ### Signing up and logging in
 
-_TODO: add once the auth PR is merged._
+### Signing up and logging in
+
+We used **express-session** with sessions stored in MongoDB through **connect-mongo**, not tokens. When you log in, the server keeps your session in the database and your browser only gets a signed session cookie (`connect.sid`). The cookie is `httpOnly` (page JavaScript can't read it), `sameSite: "lax"`, and lasts one day. We picked sessions because logging out actually ends the session on the server, and the browser never holds anything it could leak. The session secret is `SESSION_SECRET` in `.env` (see `.env.example`).
+
+Passwords are hashed with bcrypt before they are saved, so the database only has `passwordHash`, never the password itself.
+
+To try it:
+
+1. Go to `/signup` and make an account. The username needs at least 3 characters (it is saved in lowercase) and the password at least 8. **Expect** to land on `/lost` with "Logged in as <your name>" in the header.
+2. Try signing up again with the same username. **Expect** "Username already taken".
+3. Click Log out. **Expect** to go to `/login`, and the header shows the login and signup links again.
+4. Log in at `/login` with a wrong password. **Expect** "Username or password invalid". You get the same message for a username that doesn't exist, so the form doesn't reveal which usernames are taken.
+5. Log in with the right password. **Expect** to land on `/lost`, logged in.
+
+### Making an admin account
+
+Every new account is a `member`. The signup form never reads a role, so nobody can make themselves an admin by changing the form. The only way to get an admin is the make-admin script, run by someone who has access to the server and its `.env`:
+
+1. Sign up for the account normally at `/signup` (the script only changes an existing user).
+2. Run `npm run make-admin -- <username>`. **Expect** `<username> is now an admin`. If the name is wrong you'll see `No user named <username>`.
+3. If that user is logged in, they need to log out and log back in. The role is saved in the session at login, so the change only shows up after a new login.
+
 
 ### Making an admin account
 
