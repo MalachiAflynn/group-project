@@ -154,7 +154,22 @@ _TODO: add once the auth PR is merged._
 
 ### Testing the authorization rule
 
-_TODO: add once the auth PR is merged._
+Only the person who posted a Lost or Found item, or an admin, can delete it. The check happens in two places:
+
+- **Route:** `requireLogin` on `DELETE /lost/:id` and `DELETE /found/:id` checks that someone is logged in at all. If not, the request gets a `401`.
+- **Service:** `removeLostItem` and `removeFoundItem` load the item first, then call `isOwnerOrAdmin` (in `services/ownership.js`). If the user is not the owner or an admin, they get a `403` and nothing is deleted.
+
+The owner is set by the server from the logged-in user when an item is posted, so an `owner` field sent in the form is ignored. Items posted before Sprint 4 have no owner, so only an admin can delete them.
+
+To check it with two accounts:
+
+1. Sign up as `alice` at `/signup`, post a Lost item, then log out.
+2. Sign up as `bob`, go to `/lost` and click Delete on alice's item. **Expect `403`:** the item stays and the page shows "You can only delete lost items you posted".
+3. Log out and make bob an admin with `npm run make-admin -- bob`. Log back in as bob (the role is saved when you log in, so a user who was already logged in has to log in again after the script). Delete alice's item. **Expect `200`:** the item disappears.
+4. Log in as alice, post another item and delete it. **Expect `200`:** the item disappears.
+5. Log out and try a delete without a login: `curl -i -X DELETE http://localhost:3000/lost/<item id>` (the id is in the Delete button's `hx-delete` attribute in the page source). **Expect `401`** with `{"error":"You must be logged in"}`.
+
+The same steps work on `/found`. `npm test` checks the same rule without a database, in `__tests__/lostService.test.js` and `__tests__/foundServiceRules.test.js`.
 
 ### Accessibility audit
 
@@ -244,3 +259,7 @@ For updateById in the Lost repository, I passed two options to Mongoose's findBy
 ### Sprint 4 — Maryamawit Gebremedhen
 
 For accessibility fix, i made the decison to move keyboard focus to another Delete button when an item is deleted and if nothing remains, to the first form field. The alternative was to move the focus to the first form feild after pressing delete, which would have been simpler but users would have had to naviagte again. Deleting an item removes the button that was selected, which causes users to lose their place on the page. Thats why i chose to move focus to another button when possible.
+
+### Sprint 4, Malachi Flynn - Ownership Check in the Service
+
+I put the ownership check inside the service: `removeLostItem` and `removeFoundItem` load the item, then call `isOwnerOrAdmin` before deleting it. The alternative was a route-level middleware like `requireOwner` on the delete routes that loads the item and compares owners before the controller runs. That would leave the services unchanged, but the middleware would have to know which model to load for each route, so it would either skip the service layer and call the repositories directly or need a separate copy for Lost and Found. It would also load the item twice, once to check it and once to delete it. Keeping the check in the service means it runs on the same item that gets deleted, and our Jest tests can check the 403 by calling the service with a fake user and a mocked repository. The alternative would have cost duplicate loading code, and a rule that is easy to skip: if someone adds a new route later, like a "mark as claimed" update, and forgets the middleware, anyone could change anyone's item.

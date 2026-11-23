@@ -9,6 +9,7 @@ const foundItemSchema = new mongoose.Schema(
     date: Date,
     contactName: { type: String, required: true },
     contactEmail: { type: String, required: true },
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
