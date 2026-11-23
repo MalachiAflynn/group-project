@@ -60,12 +60,15 @@ Browser (form + public/app.js fetch)
         |  POST /lost  or  POST /found  (JSON)
         v
 routes/lost.js | routes/found.js        -> wires paths to controller functions
+                                           requireLogin on POST and DELETE (401 if not logged in)
         |
         v
 controllers/lostController.js | foundController.js   -> req/res <-> service
         |
         v
 services/lostService.js | foundService.js           -> validation (400 on bad input)
+                                                       delete: isOwnerOrAdmin (services/ownership.js)
+                                                       -> 403 unless owner or admin
         |
         v
 repositories/lostRepository.js | foundRepository.js -> only layer that touches the DB
@@ -73,6 +76,16 @@ repositories/lostRepository.js | foundRepository.js -> only layer that touches t
         v
 models/LostItem.js | FoundItem.js (Mongoose)  ->  MongoDB (dev container)
 db.js -> connectDB() opens the Mongoose connection (MONGODB_URI), called by server.js at startup
+
+Authentication (alongside the Lost/Found layers above):
+Browser (signup/login forms) -> POST /signup, POST /login, POST /logout
+        |
+        v
+routes/auth.js -> controllers/authController.js -> services/authService.js (bcrypt)
+        -> repositories/usersRepository.js -> models/User.js (username, passwordHash, role) -> MongoDB
+express-session + connect-mongo -> session stored in MongoDB, browser only gets the connect.sid cookie;
+                                   req.session.user = {id, username, role} is what requireLogin
+                                   and isOwnerOrAdmin check
 
 GET /health -> routes/health.js -> controllers/healthController.js -> {"status":"ok"}
                (set up before the login code, so no login needed)
@@ -143,8 +156,6 @@ and client JS now need the real MongoDB id. The Delete buttons in `views/lost.ej
 `hx-delete` URL, since there is no list position to use.
 
 ## Sprint 4: Login, Authorization, Accessibility and Health Check
-
-### Signing up and logging in
 
 ### Signing up and logging in
 
