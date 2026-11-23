@@ -173,7 +173,13 @@ The same steps work on `/found`. `npm test` checks the same rule without a datab
 
 ### Accessibility audit
 
-_TODO: add once the audit is done._
+Findings: tested keyboard navigation on the Lost, Found, Login, and Signup pages using Tab. The form were properly labeled and i saw which feild or button was selected when i used tab. I found that deleting an item with HTMX caused keyboard focus to be lost.
+
+Fix: updated public/app.js so focus moves to another Delete button after deletion, and  if no items remain it moves to the first form field.
+
+Testing: checked the fix on both Lost and Found using Tab and Enter. I also checked color contrast using WebAIM and Chrome DevTools. All tested combinations have passed WCAG AA (4.5:1 minimum): body text (14.12:1), buttons/navigation (9.41:1), hover states (13.21:1 and 9.41:1), Delete button (7.13:1), and item card text (12.69:1).
+
+How to verify: Open /lost or /found, create two items, then use Tab and Enter to delete one. Focus moves to the Delete button if we have any items left. Deleting the last item should move focus to the first form field.
 
 ### Health check
 
@@ -249,6 +255,10 @@ In found.ejs I made the design decision to add an HTMX delete button that uses t
 ### Malachi Flynn - Sprint 3 Lost Repository
 
 For updateById in the Lost repository, I passed two options to Mongoose's findByIdAndUpdate: returnDocument "after" and runValidators true. The alternative was to use the defaults, which is less code. But by default Mongoose returns the item as it was before the update, so anything that shows the result, like a future "mark as claimed" button, would show old data right after a change. Mongoose also skips schema checks on updates by default, so an update could save a value the schema would reject on create. Setting both options means updateById returns what is actually in the database and follows the same rules as create. The cost is that an update with a bad value now fails instead of quietly saving, so the service will need to handle that error.
+
+### Sprint 4 — Maryamawit Gebremedhen
+
+For accessibility fix, i made the decison to move keyboard focus to another Delete button when an item is deleted and if nothing remains, to the first form field. The alternative was to move the focus to the first form feild after pressing delete, which would have been simpler but users would have had to naviagte again. Deleting an item removes the button that was selected, which causes users to lose their place on the page. Thats why i chose to move focus to another button when possible.
 
 ### Sprint 4, Malachi Flynn - Ownership Check in the Service
 

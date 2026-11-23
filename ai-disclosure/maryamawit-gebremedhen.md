@@ -13,3 +13,7 @@ I used claude for help understanding and using terminal/Git commands, troublesho
 
 
 I used claude for help understanding and using terminal/Git commands, troubleshooting for terminal and Git errors, I presented the errors to understand the underlying issue. I pasted my code and asked what was the syntax errors because i couldn't figure out why i was getting red lines.
+
+\## Sprint 3
+
+I used copilot for help understanding and using terminal/Git commands, helping me start my docker, and presenting the errors i was getting with mongo db and how to fix it.
