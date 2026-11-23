@@ -146,11 +146,29 @@ and client JS now need the real MongoDB id. The Delete buttons in `views/lost.ej
 
 ### Signing up and logging in
 
-_TODO: add once the auth PR is merged._
+### Signing up and logging in
+
+We used **express-session** with sessions stored in MongoDB through **connect-mongo**, not tokens. When you log in, the server keeps your session in the database and your browser only gets a signed session cookie (`connect.sid`). The cookie is `httpOnly` (page JavaScript can't read it), `sameSite: "lax"`, and lasts one day. We picked sessions because logging out actually ends the session on the server, and the browser never holds anything it could leak. The session secret is `SESSION_SECRET` in `.env` (see `.env.example`).
+
+Passwords are hashed with bcrypt before they are saved, so the database only has `passwordHash`, never the password itself.
+
+To try it:
+
+1. Go to `/signup` and make an account. The username needs at least 3 characters (it is saved in lowercase) and the password at least 8. **Expect** to land on `/lost` with "Logged in as <your name>" in the header.
+2. Try signing up again with the same username. **Expect** "Username already taken".
+3. Click Log out. **Expect** to go to `/login`, and the header shows the login and signup links again.
+4. Log in at `/login` with a wrong password. **Expect** "Username or password invalid". You get the same message for a username that doesn't exist, so the form doesn't reveal which usernames are taken.
+5. Log in with the right password. **Expect** to land on `/lost`, logged in.
 
 ### Making an admin account
 
-_TODO: add once the auth PR is merged._
+Every new account is a `member`. The signup form never reads a role, so nobody can make themselves an admin by changing the form. The only way to get an admin is the make-admin script, run by someone who has access to the server and its `.env`:
+
+1. Sign up for the account normally at `/signup` (the script only changes an existing user).
+2. Run `npm run make-admin -- <username>`. **Expect** `<username> is now an admin`. If the name is wrong you'll see `No user named <username>`.
+3. If that user is logged in, they need to log out and log back in. The role is saved in the session at login, so the change only shows up after a new login.
+
+
 
 ### Testing the authorization rule
 
@@ -263,3 +281,6 @@ For accessibility fix, i made the decison to move keyboard focus to another Dele
 ### Sprint 4, Malachi Flynn - Ownership Check in the Service
 
 I put the ownership check inside the service: `removeLostItem` and `removeFoundItem` load the item, then call `isOwnerOrAdmin` before deleting it. The alternative was a route-level middleware like `requireOwner` on the delete routes that loads the item and compares owners before the controller runs. That would leave the services unchanged, but the middleware would have to know which model to load for each route, so it would either skip the service layer and call the repositories directly or need a separate copy for Lost and Found. It would also load the item twice, once to check it and once to delete it. Keeping the check in the service means it runs on the same item that gets deleted, and our Jest tests can check the 403 by calling the service with a fake user and a mocked repository. The alternative would have cost duplicate loading code, and a rule that is easy to skip: if someone adds a new route later, like a "mark as claimed" update, and forgets the middleware, anyone could change anyone's item.
+
+### Sprint 4, Caleb Richards - Authorization (Sessions Instead of Tokens)
+For login I used express-session with the sessions stored in MongoDB through connect-mongo, instead of a token scheme like a JWT. With a JWT, the server signs a token holding the user's id and role and the browser sends it back on every request, so the server doesn't have to look anything up or store sessions at all. That is the main thing tokens would have saved us: one database read per each request and the connect-mongo dependency. But a JWT stays valid until it expires, so logging out only deletes the browser's copy, and a stolen token keeps working. Ending it for real would mean keeping a blocklist of revoked tokens in the database, which brings back the lookup we were trying to avoid. The token would also have to be stored somewhere, and if it went in localStorage, any script on the page could read it. With sessions, logout calls `req.session.destroy()` and the session is gone on the server. The browser only holds a random session id in an `httpOnly` cookie that page JavaScript can't read, and `req.session.regenerate()` gives a fresh id at every login. For a small app with one server and a database we already run, an extra lookup per request costs much less than writing token revocation ourselves.
